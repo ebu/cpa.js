@@ -1,0 +1,25 @@
+{
+  "name": "cpa.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ebu/cpa.js",
+  "authors": [
+    "barroco <barroco@ebu.ch>"
+  ],
+  "description": "Library which implements the Cross-Platform Authentication protocol for `Clients`",
+  "main": "cpa.js",
+  "keywords": [
+    "CPA",
+    "EBU",
+    "Cross-Platform",
+    "Authentication",
+    "Broadcasting"
+  ],
+  "license": "BSD 3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
