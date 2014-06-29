@@ -7,7 +7,7 @@
     "barroco <barroco@ebu.ch>"
   ],
   "description": "Library which implements the Cross-Platform Authentication protocol for Clients",
-  "main": "cpa.js",
+  "main": "dist/cpa.min.js",
   "keywords": [
     "CPA",
     "EBU",
@@ -22,5 +22,13 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "require.js": "*",
+    "jquery": "~2.1.1",
+    "js-logger": "~0.9.2"
+  },
+  "devDependencies": {
+    "almond": "~0.2.9"
+  }
 }
