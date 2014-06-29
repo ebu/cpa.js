@@ -4,21 +4,6 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
-    concat: {
-      options: {
-        separator: "\n\n"
-      },
-      dist: {
-        src: [
-          'src/_intro.js',
-          'src/req.js',
-          'src/cpa.js',
-          'src/_outro.js'
-        ],
-        dest: 'dist/<%= pkg.name.replace(".js", "") %>.js'
-      }
-    },
-
     uglify: {
       options: {
         banner: '/*! <%= pkg.name.replace(".js", "") %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
@@ -52,7 +37,7 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: ['dist/cpa.js'],
+      files: ['src/*.js', 'src/utils/*.js'],
       options: {
         globals: {
           console: true,
@@ -65,7 +50,7 @@ module.exports = function(grunt) {
 
     watch: {
       files: ['src/*', 'src/cpa/*'],
-      tasks: ['concat', 'requirejs']
+      tasks: ['requirejs', 'jshint']
     }
   });
 
@@ -73,10 +58,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('default', ['concat', 'jshint', 'qunit', 'requirejs']);
+  grunt.registerTask('default', ['requirejs', 'jshint', 'qunit']);
 
 };
