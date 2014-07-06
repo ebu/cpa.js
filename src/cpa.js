@@ -1,5 +1,5 @@
 /*global define*/
-define('cpa', ['cpa-definition', 'logger', './device-flow'], function(definition, Logger, device) {
+define('cpa', ['definition', 'logger', './cpa/device-flow'], function(definition, Logger, device) {
   'use strict';
 
   return {

@@ -1,5 +1,5 @@
 /*global define*/
-define(['request', './cpa-definition'], function(req, cpa) {
+define(['request', './definition'], function(req, cpa) {
   'use strict';
 
   return {

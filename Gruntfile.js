@@ -32,7 +32,7 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: ['src/*.js', 'src/utils/*.js'],
+      files: ['src/*.js', 'src/utils/*.js', 'src/cpa/*.js'],
       options: {
         globals: {
           console: true,
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: ['src/*', 'src/utils/*'],
+      files: ['src/*', 'src/utils/*', 'src/cpa/*.js'],
       tasks: ['requirejs', 'jshint']
     }
   });
