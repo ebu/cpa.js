@@ -32,7 +32,7 @@ define(['request', './definition'], function(req, cpa) {
             done(new Error('wrong status code'), null, null);
           }
         })
-        .fail(function(jqXHR, textStatus) {
+        .fail(function() {
           // Request failed
           done(new Error('request failed'), null, null);
         });
@@ -65,7 +65,7 @@ define(['request', './definition'], function(req, cpa) {
             done(new Error('wrong status code'));
           }
         })
-        .fail(function(jqXHR, textStatus) {
+        .fail(function() {
           // Request failed
           done(new Error('request failed'));
         });
@@ -94,7 +94,7 @@ define(['request', './definition'], function(req, cpa) {
         .success(function(data) {
           done(null, data);
         })
-        .fail(function(jqXHR, textStatus) {
+        .fail(function() {
           done(new Error('request failed'));
         });
     },
@@ -104,10 +104,11 @@ define(['request', './definition'], function(req, cpa) {
      * The association is represented by the device_code (User Mode)
      *
      * @param authProvider Base url of the authorization provider
-     * @param clientId Id of this client
+     * @param clientId     Id of this client
      * @param clientSecret Secret of this client
-     * @param deviceCode Code returned by the authorization provider in order to check if the user_code has been validated.
-     * @param domain Domain of the requested token
+     * @param deviceCode   Code returned by the authorization provider in order
+     *                     to check if the user_code has been validated
+     * @param domain       Domain of the requested token
      * @param done
      */
     requestUserAccessToken: function(authProvider, clientId, clientSecret, deviceCode, domain, done) {
@@ -136,7 +137,7 @@ define(['request', './definition'], function(req, cpa) {
             done(null, data);
           }
         })
-        .fail(function(jqXHR, textStatus) {
+        .fail(function() {
           done(new Error('request failed'), null);
         });
     }

@@ -441,11 +441,6 @@ define('cpa/definition',[], function() {
   
 
   return {
-    errorMessages: {
-      headerNotFound: 'Missing WWW-Authenticate header.  \
-                      Please, make sure CORS headers are correctly sent. \
-                      ("Access-Control-Expose-Headers: WWW-Authenticate")'
-    },
 
     /**
      * Endpoints defined in the CPA spec
@@ -475,6 +470,10 @@ define('cpa/definition',[], function() {
 /*global define*/
 define('request',['jquery'], function($) {
   
+
+  /**
+   * Wrapper to simplify Http Asynchronous calls.
+   */
 
   return {
     postJSON: function(url, body, accessToken) {
@@ -524,12 +523,17 @@ define('cpa/device-flow',['request', './definition'], function(req, cpa) {
   
 
   return {
+
     /**
      * Register the client with the Authentication Provider
      *
-     * done: function(err, status_code, body) {}
+     * @param authProvider Base url of the authorization provider
+     * @param clientName Name of this client
+     * @param softwareId Identifier of the software running on this client
+     * @param softwareVersion Version of the software running on this client
+     * @param done function(err, clientId, clientSecret) {}
      */
-    registerClient: function(APBaseUrl, clientName, softwareId, softwareVersion, done) {
+    registerClient: function(authProvider, clientName, softwareId, softwareVersion, done) {
       /* jshint -W106:start */
       var registrationBody = {
         client_name: clientName,
@@ -538,31 +542,32 @@ define('cpa/device-flow',['request', './definition'], function(req, cpa) {
       };
       /* jshint -W106:end */
 
-      req.postJSON(APBaseUrl + cpa.endpoints.apRegister, registrationBody)
+      req.postJSON(authProvider + cpa.endpoints.apRegister, registrationBody)
         .success(function(data, textStatus, jqXHR) {
           if (jqXHR.status === 201) {
             // Success
             done(null, data.client_id, data.client_secret);
           } else {
             // Wrong status code
-            done(new Error({message: 'wrong status code', 'jqXHR': jqXHR}), jqXHR.status, textStatus);
+            done(new Error('wrong status code'), null, null);
           }
         })
-        .fail(function(jqXHR, textStatus) {
+        .fail(function() {
           // Request failed
-          done(new Error({message: 'request failed', 'jqXHR': jqXHR}), jqXHR.status, textStatus);
+          done(new Error('request failed'), null, null);
         });
     },
 
     /**
+     * Request a user code
      *
-     * @param APBaseUrl
-     * @param clientId
-     * @param clientSecret
-     * @param domain
-     * @param done
+     * @param authProvider Base url of the authorization provider
+     * @param clientId Id of this client
+     * @param clientSecret Secret of this client
+     * @param domain Domain of the token for which the client is requesting an association
+     * @param done Callback done(err)
      */
-    requestUserCode: function(APBaseUrl, clientId, clientSecret, domain, done) {
+    requestUserCode: function(authProvider, clientId, clientSecret, domain, done) {
       /* jshint -W106:start */
       var body = {
         client_id: clientId,
@@ -571,30 +576,31 @@ define('cpa/device-flow',['request', './definition'], function(req, cpa) {
       };
       /* jshint -W106:end */
 
-      req.postJSON(APBaseUrl + cpa.endpoints.apAssociate, body)
+      req.postJSON(authProvider + cpa.endpoints.apAssociate, body)
         .success(function(data, textStatus, jqXHR) {
           if (jqXHR.status === 200) {
             done(null, data);
           } else {
             // Wrong status code
-            done({message: 'wrong status code', 'jqXHR': jqXHR});
+            done(new Error('wrong status code'));
           }
         })
-        .fail(function(jqXHR, textStatus) {
+        .fail(function() {
           // Request failed
-          done({ message: 'request failed', 'jqXHR': jqXHR, 'textStatus': textStatus });
+          done(new Error('request failed'));
         });
     },
 
     /**
+     * Request a token for this client (Client Mode)
      *
-     * @param APBaseUrl
-     * @param clientId
-     * @param clientSecret
-     * @param domain
+     * @param authProvider Base url of the authorization provider
+     * @param clientId Id of this client
+     * @param clientSecret Secret of this client
+     * @param domain Domain of the requested token
      * @param done
      */
-    requestClientAccessToken: function(APBaseUrl, clientId, clientSecret, domain, done) {
+    requestClientAccessToken: function(authProvider, clientId, clientSecret, domain, done) {
       /* jshint -W106:start */
       var body = {
         grant_type: 'http://tech.ebu.ch/cpa/1.0/client_credentials',
@@ -604,25 +610,28 @@ define('cpa/device-flow',['request', './definition'], function(req, cpa) {
       };
       /* jshint -W106:end */
 
-      req.postJSON(APBaseUrl + cpa.endpoints.apToken, body)
+      req.postJSON(authProvider + cpa.endpoints.apToken, body)
         .success(function(data) {
           done(null, data);
         })
-        .fail(function(jqXHR, textStatus) {
-          done(new Error({ message: 'request failed', 'jqXHR': jqXHR, 'textStatus': textStatus }));
+        .fail(function() {
+          done(new Error('request failed'));
         });
     },
 
     /**
+     * Request a token for the user associated with this device.
+     * The association is represented by the device_code (User Mode)
      *
-     * @param APBaseUrl
-     * @param clientId
-     * @param clientSecret
-     * @param deviceCode
-     * @param domain
+     * @param authProvider Base url of the authorization provider
+     * @param clientId     Id of this client
+     * @param clientSecret Secret of this client
+     * @param deviceCode   Code returned by the authorization provider in order
+     *                     to check if the user_code has been validated
+     * @param domain       Domain of the requested token
      * @param done
      */
-    requestUserAccessToken: function(APBaseUrl, clientId, clientSecret, deviceCode, domain, done) {
+    requestUserAccessToken: function(authProvider, clientId, clientSecret, deviceCode, domain, done) {
       /* jshint -W106:start */
       var body = {
         grant_type: 'http://tech.ebu.ch/cpa/1.0/device_code',
@@ -633,7 +642,7 @@ define('cpa/device-flow',['request', './definition'], function(req, cpa) {
       };
       /* jshint -W106:end */
 
-      req.postJSON(APBaseUrl + cpa.endpoints.apToken, body)
+      req.postJSON(authProvider + cpa.endpoints.apToken, body)
         .success(function(data, textStatus, jqXHR) {
           var statusCode = jqXHR.status;
           if (statusCode === 202) {
@@ -648,8 +657,8 @@ define('cpa/device-flow',['request', './definition'], function(req, cpa) {
             done(null, data);
           }
         })
-        .fail(function(jqXHR, textStatus) {
-          done(new Error({message: 'request failed', 'jqXHR': jqXHR, 'textStatus': textStatus }), null);
+        .fail(function() {
+          done(new Error('request failed'), null);
         });
     }
   };
@@ -660,62 +669,6 @@ define('cpa', ['./cpa/definition', 'logger', './cpa/device-flow'], function(defi
   
 
   return {
-
-
-    /**
-     * This method parses the WWW-Authenticate header of the Service Provider
-     * response.
-     * @param challenge is the value of the WWW-Authenticate header.
-     * @returns An object containing the Authorization Provider URI and the available
-     * modes
-     */
-    parseWwwAuthenticate: function(challenge) {
-      var regex = /(?:(\w*)\=\"(.*?))*\"/g;
-      var match = [], data = {};
-      while ((match = regex.exec(challenge)) !== null) {
-        data[match[1]] = match[2];
-      }
-
-      var modesArray = data.modes.split(',');
-      var modes = {
-        client:  (modesArray.indexOf('client') !== -1),
-        user:    (modesArray.indexOf('user') !== -1),
-        anonymous: false
-      };
-
-      return { apBaseUrl: data.uri+'/', modes: modes };
-    },
-
-    /**
-     *  Discover the responsible AP and the available modes for a domain
-     *  Application Specific
-     */
-//
-//    getServiceInfos: function(domain, done) {
-//      var callback = function(jqXHR) {
-//        var challenge = jqXHR.getResponseHeader('WWW-Authenticate');
-//        if (!challenge) {
-//          done(new Error(errorMessages.headerNotFound));
-//          return;
-//        }
-//
-//        var spInfos = parseWwwAuthenticate(challenge);
-//        done(null, spInfos.apBaseUrl, spInfos.modes);
-//      };
-//
-//      var found = false;
-//
-//      return requestHelper.get(domain + cpa.endpoints.spDiscover)
-//        .done(function(body, textStatus, jqXHR) {
-//          callback(jqXHR);
-//        })
-//        .fail(function(jqXHR, textStatus, err) {
-//          callback(jqXHR);
-//        });
-//
-//
-//  //    done(new Error('Unable to find available modes for domain : ' + domain));
-//    },
     definition: definition,
     device: device
   };
