@@ -57,11 +57,15 @@ The `cpa` object is used to expose the library :
     </script>
     
 
-## Development
+## Development 
 
 ### Build
 
-> grunt build
+> npm install
+
+> bower install
+
+> grunt
 
 
 ## Related Projects
