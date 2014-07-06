@@ -1,13 +1,12 @@
 /*global define*/
-define('device-flow', ['cpa', './utils/req'], function(cpa, req) {
+define(['request', './cpa-definition'], function(req, cpa) {
   'use strict';
 
   return {
-
     /**
      * Register the client with the Authentication Provider
-     * done: function(err, status_code, body) {}
      *
+     * done: function(err, status_code, body) {}
      */
     registerClient: function(APBaseUrl, clientName, softwareId, softwareVersion, done) {
       /* jshint -W106:start */

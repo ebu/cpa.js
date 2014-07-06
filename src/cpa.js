@@ -1,25 +1,9 @@
 /*global define*/
-define('cpa', ['./utils/req', 'logger', 'device-flow'], function(requestHelper, Logger, device) {
+define('cpa', ['cpa-definition', 'logger', './device-flow'], function(definition, Logger, device) {
   'use strict';
 
   return {
-    errorMessages: {
-      headerNotFound: 'Missing WWW-Authenticate header.  \
-                      Please, make sure CORS headers are correctly sent. \
-                      ("Access-Control-Expose-Headers: WWW-Authenticate")'
-    },
 
-    /**
-     * Endpoints defined in the CPA spec
-     */
-    endpoints: {
-      apRegister: 'register',
-      apToken: 'token',
-      apAssociate: 'associate',
-
-      // RadioTag spec
-      spDiscover: 'tags'
-    },
 
     /**
      * This method parses the WWW-Authenticate header of the Service Provider
@@ -75,6 +59,7 @@ define('cpa', ['./utils/req', 'logger', 'device-flow'], function(requestHelper, 
 //
 //  //    done(new Error('Unable to find available modes for domain : ' + domain));
 //    },
+    definition: definition,
     device: device
   };
 });
