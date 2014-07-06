@@ -2,6 +2,10 @@
 define(['jquery'], function($) {
   'use strict';
 
+  /**
+   * Wrapper to simplify Http Asynchronous calls.
+   */
+
   return {
     postJSON: function(url, body, accessToken) {
       return $.ajax({

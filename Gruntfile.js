@@ -9,7 +9,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/<%= pkg.name.replace(".js", "") %>.min.js': ['<%= concat.dist.dest %>']
+          'dist/<%= pkg.name.replace(".js", "") %>.min.js': ['<%= requirejs.compile.options.out %>']
         }
       }
     },
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
           baseUrl: 'src',
           include: ['main'],
           mainConfigFile: 'src/main.js',
-          out: 'dist/cpa-built.js',
+          out: 'dist/cpa.js',
           wrap: {
             startFile: 'src/wrap/_start.js',
             endFile: 'src/wrap/_end.js'
@@ -43,6 +43,10 @@ module.exports = function(grunt) {
       }
     },
 
+    qunit: {
+      all: ['test/**/*.html']
+    },
+
     watch: {
       files: ['src/*', 'src/utils/*', 'src/cpa/*.js'],
       tasks: ['requirejs', 'jshint']
@@ -51,10 +55,10 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-//  grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
 
 //  grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('default', ['requirejs', 'jshint', 'qunit']);
+  grunt.registerTask('default', ['requirejs', 'jshint', 'qunit', 'uglify']);
 };
