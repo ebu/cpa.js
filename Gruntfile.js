@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
-
     pkg: grunt.file.readJSON('package.json'),
 
     uglify: {
@@ -32,10 +31,6 @@ module.exports = function(grunt) {
       }
     },
 
-    qunit: {
-      files: ['test/*.html']
-    },
-
     jshint: {
       files: ['src/*.js', 'src/utils/*.js'],
       options: {
@@ -49,18 +44,17 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: ['src/*', 'src/cpa/*'],
+      files: ['src/*', 'src/utils/*'],
       tasks: ['requirejs', 'jshint']
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
+//  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
 
-  grunt.registerTask('test', ['jshint', 'qunit']);
+//  grunt.registerTask('test', ['jshint', 'qunit']);
   grunt.registerTask('default', ['requirejs', 'jshint', 'qunit']);
-
 };
