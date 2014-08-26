@@ -1,6 +1,8 @@
 cpa.js
 ======
 
+[![Build Status](https://travis-ci.org/ebu/cpa.js.svg?branch=master)](https://travis-ci.org/ebu/cpa.js)
+
 This project contains a library which implements the Cross-Platform Authentication 
 protocol for `Clients` and is provided and maintained as reference implementation.
 
