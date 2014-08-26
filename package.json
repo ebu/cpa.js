@@ -20,5 +20,8 @@
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-requirejs": "~0.4.4",
     "grunt-mocha": "~0.4.11"
+  },
+  scripts: {
+    test: "grunt test"
   }
 }
