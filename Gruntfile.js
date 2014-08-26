@@ -43,22 +43,27 @@ module.exports = function(grunt) {
       }
     },
 
-    qunit: {
-      all: ['test/**/*.html']
+    mocha: {
+      test: {
+        src: ['test/**/*.html'],
+        options: {
+          run: true
+        }
+      }
     },
 
     watch: {
       files: ['src/*', 'src/utils/*', 'src/cpa/*.js'],
-      tasks: ['requirejs', 'jshint', 'uglify', 'qunit']
+      tasks: ['requirejs', 'jshint', 'uglify', 'mocha']
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-mocha');
 
-//  grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('default', ['requirejs', 'jshint', 'uglify', 'qunit']);
+  grunt.registerTask('test', ['jshint', 'mocha']);
+  grunt.registerTask('default', ['requirejs', 'jshint', 'uglify']);
 };
