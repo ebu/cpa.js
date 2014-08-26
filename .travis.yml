@@ -9,6 +9,7 @@ cache:
   - src/lib
 
 before_install:
+- npm install -g grunt-cli
 - npm install -g bower --production
 - bower install
 
