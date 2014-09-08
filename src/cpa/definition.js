@@ -1,19 +1,16 @@
-/*global define*/
-define([], function() {
-  'use strict';
+/*global module*/
+'use strict';
 
-  return {
+module.exports = {
+  /**
+   * Endpoints defined in the CPA spec
+   */
+  endpoints: {
+    apRegister: 'register',
+    apToken: 'token',
+    apAssociate: 'associate',
 
-    /**
-     * Endpoints defined in the CPA spec
-     */
-    endpoints: {
-      apRegister: 'register',
-      apToken: 'token',
-      apAssociate: 'associate',
-
-      // RadioTag spec
-      spDiscover: 'tags'
-    }
-  };
-});
+    // RadioTag spec
+    spDiscover: 'tags'
+  }
+};
