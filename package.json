@@ -1,7 +1,10 @@
 {
   "name": "cpa.js",
   "version": "0.0.0",
-  "main": "dist/cpa.min.js",
+  "main": "src/main.js",
+  "browser": {
+    "./src/utils/http-request.js": "./src/utils/browser-http-request.js"
+  },
   "description": "This project contains reference implementations of Cross-Platform Authentication client library ",
   "repository": {
     "type": "git",
@@ -11,7 +14,10 @@
   "author": "barroco <barroco@ebu.ch>",
   "license": "BSD 3",
   "readmeFilename": "README.md",
-  "dependencies": {},
+  "dependencies": {
+    "request": "~2.40.0",
+    "es6-promise": "~1.0.0"
+  },
   "devDependencies": {
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jshint": "~0.6.4",

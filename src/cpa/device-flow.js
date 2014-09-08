@@ -25,19 +25,21 @@ module.exports = {
     /* jshint -W106:end */
 
     req.postJSON(authProvider + cpa.endpoints.apRegister, registrationBody)
-      .success(function(data, textStatus, jqXHR) {
-        if (jqXHR.status === 201) {
-          // Success
-          done(null, data.client_id, data.client_secret);
-        } else {
-          // Wrong status code
-          done(new Error('wrong status code'), null, null);
+      .then(
+        function(response) {
+          if (response.statusCode === 201) {
+            // Success
+            done(null, response.body.client_id, response.body.client_secret);
+          } else {
+            // Wrong status code
+            done(new Error('wrong status code'), null, null);
+          }
+        },
+        function() {
+          // Request failed
+          done(new Error('request failed'), null, null);
         }
-      })
-      .fail(function() {
-        // Request failed
-        done(new Error('request failed'), null, null);
-      });
+      );
   },
 
   /**
@@ -59,18 +61,20 @@ module.exports = {
     /* jshint -W106:end */
 
     req.postJSON(authProvider + cpa.endpoints.apAssociate, body)
-      .success(function(data, textStatus, jqXHR) {
-        if (jqXHR.status === 200) {
-          done(null, data);
-        } else {
-          // Wrong status code
-          done(new Error('wrong status code'));
+      .then(
+        function(response) {
+          if (response.statusCode === 200) {
+            done(null, response.body);
+          } else {
+            // Wrong status code
+            done(new Error('wrong status code'));
+          }
+        },
+        function() {
+          // Request failed
+          done(new Error('request failed'));
         }
-      })
-      .fail(function() {
-        // Request failed
-        done(new Error('request failed'));
-      });
+      );
   },
 
   /**
@@ -93,12 +97,14 @@ module.exports = {
     /* jshint -W106:end */
 
     req.postJSON(authProvider + cpa.endpoints.apToken, body)
-      .success(function(data) {
-        done(null, data);
-      })
-      .fail(function() {
-        done(new Error('request failed'));
-      });
+      .then(
+        function(response) {
+          done(null, response.body);
+        },
+        function() {
+          done(new Error('request failed'));
+        }
+      );
   },
 
   /**
@@ -125,22 +131,24 @@ module.exports = {
     /* jshint -W106:end */
 
     req.postJSON(authProvider + cpa.endpoints.apToken, body)
-      .success(function(data, textStatus, jqXHR) {
-        var statusCode = jqXHR.status;
-        if (statusCode === 202) {
-          // Authorization pending
-          done(null, null);
+      .then(
+        function(response) {
+          var statusCode = response.statusCode;
+          if (statusCode === 202) {
+            // Authorization pending
+            done(null, null);
+          }
+          else if (statusCode === 200) {
+            // Ok
+            done(null, response.body);
+          } else {
+            // Wrong statusCode
+            done(null, response.body);
+          }
+        },
+        function() {
+          done(new Error('request failed'), null);
         }
-        else if (statusCode === 200) {
-          // Ok
-          done(null, data);
-        } else {
-          // Wrong statusCode
-          done(null, data);
-        }
-      })
-      .fail(function() {
-        done(new Error('request failed'), null);
-      });
+      );
   }
 };

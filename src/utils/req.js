@@ -1,7 +1,7 @@
-/*global require,module*/
+/*global require, module*/
 'use strict';
 
-var $ = require('jquery');
+var ajax = require('./http-request');
 
 /**
  * Wrapper to simplify Http Asynchronous calls.
@@ -9,42 +9,50 @@ var $ = require('jquery');
 
 module.exports = {
   postJSON: function(url, body, accessToken) {
-    return $.ajax({
-      type: 'POST',
+    var params = {
+      method: 'POST',
       url: url,
-      data: JSON.stringify(body),
-      contentType: 'application/json',
-      beforeSend: function(xhr) {
-        if (accessToken) {
-          xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-        }
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type' : 'application/json'
       }
-    });
+    };
+
+    if (accessToken) {
+      params.headers.Authorization = 'Bearer ' + accessToken;
+    }
+
+    return ajax(params);
   },
 
   postForm: function(url, uriEncodedBody, accessToken) {
-    return $.ajax({
-      type: 'POST',
+    var params = {
+      method: 'POST',
       url: url,
-      contentType: 'application/x-www-form-urlencoded',
-      data: uriEncodedBody,
-      beforeSend: function(xhr) {
-        if (accessToken) {
-          xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-        }
+      body: uriEncodedBody,
+      headers: {
+        'Content-Type' : 'application/x-www-form-urlencoded'
       }
-    });
+    };
+
+    if (accessToken) {
+      params.headers.Authorization = 'Bearer ' + accessToken;
+    }
+
+    return ajax(params);
   },
 
   get: function(url, accessToken) {
-    return $.ajax({
-      type: 'GET',
+    var params = {
+      method: 'GET',
       url: url,
-      beforeSend: function(xhr) {
-        if (accessToken) {
-          xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-        }
-      }
-    });
+      headers: {}
+    };
+
+    if (accessToken) {
+      params.headers.Authorization = 'Bearer ' + accessToken;
+    }
+
+    return ajax(params);
   }
 };
