@@ -58,6 +58,21 @@ The `cpa` object is used to expose the library:
          });
     </script>
 
+### Node.js
+
+Install the cpa.js package using NPM:
+
+    npm install cpa.js
+
+Use `require` to access within Node.js:
+
+    var cpa = require('cpa.js');
+
+    cpa.device.registerClient('http://local.ebu.io:8001/', '1', '2', '3',
+         function(err, info) {
+           console.log(err, info);
+         });
+
 
 ## Development
 
@@ -80,7 +95,7 @@ The demonstrators below are based on this library:
 
 * [Michael Barroco](https://github.com/barroco) (EBU)
 * [Chris Needham](https://github.com/chrisn) (BBC)
-
+* [Andrew Nicolaou](https://github.com/andrewn) (BBC)
 
 ## Copyright & License
 
