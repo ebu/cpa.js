@@ -4,10 +4,16 @@
 var req = require('../utils/req'),
     cpa = require('./definition');
 
+/**
+ * CPA Device Flow
+ * @module device-flow
+ */
 module.exports = {
 
   /**
    * Register the client with the Authentication Provider
+   *
+   * @see EBU Tech 3366, section 8.1
    *
    * @param authProvider Base url of the authorization provider
    * @param clientName Name of this client
@@ -45,6 +51,8 @@ module.exports = {
   /**
    * Request a user code
    *
+   * @see EBU Tech 3366, section 8.2
+   *
    * @param authProvider Base url of the authorization provider
    * @param clientId Id of this client
    * @param clientSecret Secret of this client
@@ -80,6 +88,8 @@ module.exports = {
   /**
    * Request a token for this client (Client Mode)
    *
+   * @see EBU Tech 3366, section 8.3.1.1
+   *
    * @param authProvider Base url of the authorization provider
    * @param clientId Id of this client
    * @param clientSecret Secret of this client
@@ -110,6 +120,8 @@ module.exports = {
   /**
    * Request a token for the user associated with this device.
    * The association is represented by the device_code (User Mode)
+   *
+   * @see EBU Tech 3366, section 8.3.1.2
    *
    * @param authProvider Base url of the authorization provider
    * @param clientId     Id of this client
