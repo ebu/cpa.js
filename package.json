@@ -27,7 +27,8 @@
     "grunt-browserify": "~2.1.4",
     "browserify": "~5.10.0",
     "grunt-mocha": "~0.4.11",
-    "jquery": "~2.1.1"
+    "jquery": "~2.1.1",
+    "grunt-jsdoc": "~0.5.7"
   },
   "scripts": {
     "test": "grunt test"

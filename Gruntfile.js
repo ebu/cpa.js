@@ -23,6 +23,15 @@ module.exports = function(grunt) {
       }
     },
 
+    jsdoc: {
+      dist: {
+        src: ['./src/*.js', './src/utils/*.js', './src/cpa/*.js'],
+        options: {
+          destination: 'doc'
+        }
+      }
+    },
+
     jshint: {
       files: ['src/*.js', 'src/utils/*.js', 'src/cpa/*.js'],
       options: {
@@ -55,6 +64,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-mocha');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
   grunt.registerTask('test', ['jshint', 'mocha']);
   grunt.registerTask('default', ['browserify', 'jshint', 'uglify']);
