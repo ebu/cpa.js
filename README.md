@@ -6,6 +6,8 @@ cpa.js
 This project contains a library which implements the Cross-Platform Authentication
 protocol for `Clients` and is provided and maintained as reference implementation.
 
+This software implements version 1.0 of the Cross-Platform Authentication Protocol ([EBU Tech 3366](https://tech.ebu.ch/docs/tech/tech3366.pdf))
+
 More information on Cross-Platform Authentication: [EBU Tech](http://tech.ebu.ch/cpa)
 
 
