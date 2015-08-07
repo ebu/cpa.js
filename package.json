@@ -1,6 +1,6 @@
 {
   "name": "cpa.js",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "src/main.js",
   "browser": {
     "./src/utils/http-request.js": "./src/utils/browser-http-request.js"
@@ -11,7 +11,11 @@
     "url": "git://github.com/ebu/cpa.js.git"
   },
   "keywords": [],
-  "author": "barroco <barroco@ebu.ch>",
+  "contributors": [
+    "Michael Barroco (https://github.com/barroco)",
+    "Chris Needham (https://github.com/chrisn)",
+    "Andrew Nicolaou (https://github.com/andrewn)"
+  ],
   "license": "BSD 3",
   "readmeFilename": "README.md",
   "dependencies": {
