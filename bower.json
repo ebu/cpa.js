@@ -1,13 +1,13 @@
 {
   "name": "cpa.js",
-  "version": "0.1.0",
+  "version": "1.0.4",
   "homepage": "https://github.com/ebu/cpa.js",
   "authors": [
     "Michael Barroco (https://github.com/barroco)",
     "Chris Needham (https://github.com/chrisn)",
     "Andrew Nicolaou (https://github.com/andrewn)"
   ],
-  "description": "Library which implements the Cross-Platform Authentication protocol for Clients",
+  "description": "Cross-Platform Authentication client library",
   "main": "dist/cpa.min.js",
   "keywords": [
     "CPA",
