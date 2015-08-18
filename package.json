@@ -1,11 +1,11 @@
 {
   "name": "cpa.js",
-  "version": "0.1.0",
+  "version": "1.0.4",
   "main": "src/main.js",
   "browser": {
     "./src/utils/http-request.js": "./src/utils/browser-http-request.js"
   },
-  "description": "This project contains reference implementations of Cross-Platform Authentication client library ",
+  "description": "Cross-Platform Authentication client library",
   "repository": {
     "type": "git",
     "url": "git://github.com/ebu/cpa.js.git"
