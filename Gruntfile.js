@@ -54,8 +54,8 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: ['src/*', 'src/utils/*', 'src/cpa/*.js'],
-      tasks: ['requirejs', 'jshint', 'uglify', 'mocha']
+      files: ['src/*', 'src/utils/*', 'src/cpa/*.js', 'test/*.js'],
+      tasks: ['jshint', 'browserify', 'uglify', 'mocha']
     }
   });
 
