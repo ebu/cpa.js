@@ -92,7 +92,6 @@ Use `require` to access within Node.js:
 The demonstrators below are based on this library:
 * [CPA Client](https://github.com/ebu/cpa-client)
 
-
 ## Contributors
 
 * [Michael Barroco](https://github.com/barroco) (EBU)
@@ -101,6 +100,6 @@ The demonstrators below are based on this library:
 
 ## Copyright & License
 
-Copyright (c) 2014, EBU-UER Technology & Innovation
+Copyright (c) 2014-2015, EBU-UER Technology & Innovation
 
 The code is under BSD (3-Clause) License. (see LICENSE.txt)
