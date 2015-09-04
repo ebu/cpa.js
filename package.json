@@ -20,19 +20,20 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "request": "~2.40.0",
-    "es6-promise": "~1.0.0"
+    "es6-promise": "~1.0.0",
+    "URIjs": "~1.16.0"
   },
   "devDependencies": {
+    "browserify": "~5.10.0",
+    "grunt": "~0.4.1",
+    "grunt-browserify": "~2.1.4",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-uglify": "~0.2.4",
-    "grunt": "~0.4.1",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-browserify": "~2.1.4",
-    "browserify": "~5.10.0",
+    "grunt-jsdoc": "~0.5.7",
     "grunt-mocha": "~0.4.11",
-    "jquery": "~2.1.1",
-    "grunt-jsdoc": "~0.5.7"
+    "jquery": "~2.1.1"
   },
   "scripts": {
     "test": "grunt test"

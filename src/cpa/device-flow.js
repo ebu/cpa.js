@@ -2,16 +2,18 @@
 'use strict';
 
 var req = require('../utils/req'),
-    cpa = require('./definition');
+    cpa = require('./definition'),
+    URI = require('URIjs');
 
 /**
  * CPA Device Flow
  * @module device-flow
  */
+
 module.exports = {
 
   /**
-   * Register the client with the Authentication Provider
+   * Registers the client with the Authorization Provider
    *
    * @see EBU Tech 3366, section 8.1
    *
@@ -21,6 +23,7 @@ module.exports = {
    * @param softwareVersion Version of the software running on this client
    * @param done function(err, clientId, clientSecret) {}
    */
+
   registerClient: function(authProvider, clientName, softwareId, softwareVersion, done) {
     /* jshint -W106:start */
     var registrationBody = {
@@ -30,7 +33,9 @@ module.exports = {
     };
     /* jshint -W106:end */
 
-    req.postJSON(authProvider + cpa.endpoints.apRegister, registrationBody)
+    var registerUrl = URI(authProvider).path(cpa.endpoints.apRegister);
+
+    req.postJSON(registerUrl, registrationBody)
       .then(
         function(response) {
           if (response.statusCode === 201) {
@@ -49,16 +54,18 @@ module.exports = {
   },
 
   /**
-   * Request a user code
+   * Requests a user code
    *
    * @see EBU Tech 3366, section 8.2
    *
    * @param authProvider Base url of the authorization provider
    * @param clientId Id of this client
    * @param clientSecret Secret of this client
-   * @param domain Domain of the token for which the client is requesting an association
+   * @param domain Domain of the token for which the client is requesting an
+   * association
    * @param done Callback done(err)
    */
+
   requestUserCode: function(authProvider, clientId, clientSecret, domain, done) {
     /* jshint -W106:start */
     var body = {
@@ -68,7 +75,9 @@ module.exports = {
     };
     /* jshint -W106:end */
 
-    req.postJSON(authProvider + cpa.endpoints.apAssociate, body)
+    var associateUrl = URI(authProvider).path(cpa.endpoints.apAssociate);
+
+    req.postJSON(associateUrl, body)
       .then(
         function(response) {
           if (response.statusCode === 200) {
@@ -86,7 +95,7 @@ module.exports = {
   },
 
   /**
-   * Request a token for this client (Client Mode)
+   * Requests a token for this client (Client Mode)
    *
    * @see EBU Tech 3366, section 8.3.1.1
    *
@@ -96,6 +105,7 @@ module.exports = {
    * @param domain Domain of the requested token
    * @param done
    */
+
   requestClientAccessToken: function(authProvider, clientId, clientSecret, domain, done) {
     /* jshint -W106:start */
     var body = {
@@ -106,7 +116,9 @@ module.exports = {
     };
     /* jshint -W106:end */
 
-    req.postJSON(authProvider + cpa.endpoints.apToken, body)
+    var tokenUrl = URI(authProvider).path(cpa.endpoints.apToken);
+
+    req.postJSON(tokenUrl, body)
       .then(
         function(response) {
           done(null, response.body);
@@ -118,19 +130,20 @@ module.exports = {
   },
 
   /**
-   * Request a token for the user associated with this device.
-   * The association is represented by the device_code (User Mode)
+   * Requests a token for the user associated with this device. The association
+   * is represented by the device_code (User Mode)
    *
    * @see EBU Tech 3366, section 8.3.1.2
    *
    * @param authProvider Base url of the authorization provider
-   * @param clientId     Id of this client
+   * @param clientId Id of this client
    * @param clientSecret Secret of this client
-   * @param deviceCode   Code returned by the authorization provider in order
-   *                     to check if the user_code has been validated
-   * @param domain       Domain of the requested token
+   * @param deviceCode Code returned by the authorization provider in order
+   * to check if the user_code has been validated
+   * @param domain Domain of the requested token
    * @param done
    */
+
   requestUserAccessToken: function(authProvider, clientId, clientSecret, deviceCode, domain, done) {
     /* jshint -W106:start */
     var body = {
@@ -142,7 +155,9 @@ module.exports = {
     };
     /* jshint -W106:end */
 
-    req.postJSON(authProvider + cpa.endpoints.apToken, body)
+    var tokenUrl = URI(authProvider).path(cpa.endpoints.apToken);
+
+    req.postJSON(tokenUrl, body)
       .then(
         function(response) {
           var statusCode = response.statusCode;
@@ -153,7 +168,8 @@ module.exports = {
           else if (statusCode === 200) {
             // Ok
             done(null, response.body);
-          } else {
+          }
+          else {
             // Wrong statusCode
             done(null, response.body);
           }
