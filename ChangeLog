@@ -1,0 +1,31 @@
+v1.0.6, 9/9/2015
+
+  * Added JSDoc comments.
+
+  * Fixed URL construction where the Auth Provider base URL contains a path
+    component.
+
+  * Updated Gruntfile to fix 'test' task.
+
+v1.0.5, 4/9/2015
+
+  * Use URIjs module to construct URLs.
+
+  * Updated Gruntfile to fix 'watch' task.
+
+v1.0.4, 18/8/2015
+
+  * Added contributors to bower.json and package.json.
+
+v1.0.3, 10/12/2014
+
+  * Replaced QUnit with mocha test framework.
+
+  * Use CommonJS-style modules and browserify instead of Require.js.
+
+v1.0.2, 3/8/2014
+
+  * Initial version. Corresponds with the Cross Platform Authentication
+    protocol v1.0.
+
+    See https://tech.ebu.ch/docs/tech/tech3366.pdf
