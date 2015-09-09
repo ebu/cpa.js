@@ -5,6 +5,21 @@ var req = require('../utils/req'),
     cpa = require('./definition'),
     URI = require('URIjs');
 
+/**
+ * Creates a URL to an Authorization Provider endpoint.
+ *
+ * @param {string|URI} baseUrl The Authorization Provider base URL
+ * @param {string|URI} endpointPath The URL path of the API endpoint, e.g.,
+ *   "/register", "/associate", or "/token".
+ * @returns {URI}
+ *
+ * @private
+ */
+
+var createUrl = function(baseUrl, endpointPath) {
+  return URI(baseUrl + endpointPath).normalizePath();
+};
+
 /** @namespace */
 
 var CPA = {
@@ -29,7 +44,7 @@ var CPA = {
    *
    * @see EBU Tech 3366, section 8.1.
    *
-   * @param {string} authProvider Base url of the authorization provider.
+   * @param {string} authProvider Base URL of the authorization provider.
    * @param {string} clientName Name of this client.
    * @param {string} softwareId Identifier of the software running on this
    *   client.
@@ -38,7 +53,8 @@ var CPA = {
    * @param {registerClientCallback} done Callback function.
    */
 
-  registerClient: function(authProvider, clientName, softwareId, softwareVersion, done) {
+  registerClient: function(authProvider, clientName, softwareId,
+                           softwareVersion, done) {
     /* jshint -W106:start */
     var registrationBody = {
       client_name: clientName,
@@ -47,7 +63,7 @@ var CPA = {
     };
     /* jshint -W106:end */
 
-    var registerUrl = URI(authProvider).path(cpa.endpoints.apRegister);
+    var registerUrl = createUrl(authProvider, cpa.endpoints.register);
 
     req.postJSON(registerUrl, registrationBody)
       .then(
@@ -103,7 +119,8 @@ var CPA = {
    * @param {requestUserCodeCallback} done Callback function.
    */
 
-  requestUserCode: function(authProvider, clientId, clientSecret, domain, done) {
+  requestUserCode: function(authProvider, clientId, clientSecret, domain,
+                            done) {
     /* jshint -W106:start */
     var body = {
       client_id: clientId,
@@ -112,7 +129,7 @@ var CPA = {
     };
     /* jshint -W106:end */
 
-    var associateUrl = URI(authProvider).path(cpa.endpoints.apAssociate);
+    var associateUrl = createUrl(authProvider, cpa.endpoints.associate);
 
     req.postJSON(associateUrl, body)
       .then(
@@ -161,7 +178,8 @@ var CPA = {
    * @param {requestClientAccessTokenCallback} done Callback function.
    */
 
-  requestClientAccessToken: function(authProvider, clientId, clientSecret, domain, done) {
+  requestClientAccessToken: function(authProvider, clientId, clientSecret,
+                                     domain, done) {
     /* jshint -W106:start */
     var body = {
       grant_type: 'http://tech.ebu.ch/cpa/1.0/client_credentials',
@@ -171,7 +189,7 @@ var CPA = {
     };
     /* jshint -W106:end */
 
-    var tokenUrl = URI(authProvider).path(cpa.endpoints.apToken);
+    var tokenUrl = createUrl(authProvider, cpa.endpoints.token);
 
     req.postJSON(tokenUrl, body)
       .then(
@@ -218,7 +236,8 @@ var CPA = {
    * @param {requestUserAccessTokenCallback} done Callback function.
    */
 
-  requestUserAccessToken: function(authProvider, clientId, clientSecret, deviceCode, domain, done) {
+  requestUserAccessToken: function(authProvider, clientId, clientSecret,
+                                   deviceCode, domain, done) {
     /* jshint -W106:start */
     var body = {
       grant_type: 'http://tech.ebu.ch/cpa/1.0/device_code',
@@ -229,7 +248,7 @@ var CPA = {
     };
     /* jshint -W106:end */
 
-    var tokenUrl = URI(authProvider).path(cpa.endpoints.apToken);
+    var tokenUrl = createUrl(authProvider, cpa.endpoints.token);
 
     req.postJSON(tokenUrl, body)
       .then(

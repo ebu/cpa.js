@@ -12979,18 +12979,11 @@ module.exports = {
 'use strict';
 
 module.exports = {
-
-  /**
-   * Endpoints defined in the CPA spec
-   */
-
+  // Endpoints defined in the CPA spec
   endpoints: {
-    apRegister: '/register',
-    apToken: '/token',
-    apAssociate: '/associate',
-
-    // RadioTAG spec
-    spDiscover: '/radiodns/tag/1/tags'
+    register:  '/register',
+    token:     '/token',
+    associate: '/associate',
   }
 };
 
@@ -13003,25 +12996,55 @@ var req = _dereq_('../utils/req'),
     URI = _dereq_('URIjs');
 
 /**
- * CPA Device Flow
- * @module device-flow
+ * Creates a URL to an Authorization Provider endpoint.
+ *
+ * @param {string|URI} baseUrl The Authorization Provider base URL
+ * @param {string|URI} endpointPath The URL path of the API endpoint, e.g.,
+ *   "/register", "/associate", or "/token".
+ * @returns {URI}
+ *
+ * @private
  */
 
-module.exports = {
+var createUrl = function(baseUrl, endpointPath) {
+  return URI(baseUrl + endpointPath).normalizePath();
+};
+
+/** @namespace */
+
+var CPA = {
 
   /**
-   * Registers the client with the Authorization Provider
+   * Callback function for the {@link CPA.registerClient} function.
    *
-   * @see EBU Tech 3366, section 8.1
-   *
-   * @param authProvider Base url of the authorization provider
-   * @param clientName Name of this client
-   * @param softwareId Identifier of the software running on this client
-   * @param softwareVersion Version of the software running on this client
-   * @param done function(err, clientId, clientSecret) {}
+   * @callback registerClientCallback
+   * @param {Error|null} error On success, this value is <code>null</code>;
+   *   on error, it is an <code>Error</code> object containing an error message.
+   * @param {Object|null} data On success, this value is an object containing
+   *   the information described below; on error, this value is
+   *   <code>null</code>
+   * @param {string} data.client_id A unique identifier issued to the client
+   *   by the authorization provider.
+   * @param {string} data.client_secret A shared secret value between the client
+   *   and authorization provider.
    */
 
-  registerClient: function(authProvider, clientName, softwareId, softwareVersion, done) {
+  /**
+   * Registers the client with the Authorization Provider.
+   *
+   * @see EBU Tech 3366, section 8.1.
+   *
+   * @param {string} authProvider Base URL of the authorization provider.
+   * @param {string} clientName Name of this client.
+   * @param {string} softwareId Identifier of the software running on this
+   *   client.
+   * @param {string} softwareVersion Version of the software running on this
+   *   client.
+   * @param {registerClientCallback} done Callback function.
+   */
+
+  registerClient: function(authProvider, clientName, softwareId,
+                           softwareVersion, done) {
     /* jshint -W106:start */
     var registrationBody = {
       client_name: clientName,
@@ -13030,7 +13053,7 @@ module.exports = {
     };
     /* jshint -W106:end */
 
-    var registerUrl = URI(authProvider).path(cpa.endpoints.apRegister);
+    var registerUrl = createUrl(authProvider, cpa.endpoints.register);
 
     req.postJSON(registerUrl, registrationBody)
       .then(
@@ -13051,19 +13074,43 @@ module.exports = {
   },
 
   /**
-   * Requests a user code
+   * Callback function for the {@link CPA.requestUserCode} function.
    *
-   * @see EBU Tech 3366, section 8.2
-   *
-   * @param authProvider Base url of the authorization provider
-   * @param clientId Id of this client
-   * @param clientSecret Secret of this client
-   * @param domain Domain of the token for which the client is requesting an
-   * association
-   * @param done Callback done(err)
+   * @callback requestUserCodeCallback
+   * @param {Error|null} error On success, this value is <code>null</code>;
+   *   on error, it is an <code>Error</code> object containing an error message.
+   * @param {Object|null} data On success, this value is an object containing
+   *   the information described below; on error, this value is
+   *   <code>null</code>.
+   * @param {string} data.device_code The temporary device verification code.
+   * @param {string} data.user_code The temporary user verification code,
+   *   usually a short string of alphanumeric characters, which the user should
+   *   enter after visiting the <code>verification_uri</code>.
+   * @param {string} data.verification_uri The URL to be displayed to the user
+   *   by the client.
+   * @param {string} data.interval The minimum time the client should wait
+   *   between making requests to obtain an access token, e.g., by calling
+   *   {@link CPA.requestUserAccessToken}, in seconds.
+   * @param {number} data.expires_in The length of time the
+   *   <code>device_code</code> and <code>user_code</code> are valid,
+   *   in seconds.
    */
 
-  requestUserCode: function(authProvider, clientId, clientSecret, domain, done) {
+  /**
+   * Requests a user code.
+   *
+   * @see EBU Tech 3366, section 8.2.
+   *
+   * @param {string|URI} authProvider Base URL of the authorization provider.
+   * @param {string} clientId Id of this client.
+   * @param {string} clientSecret Secret of this client.
+   * @param {string} domain Domain of the token for which the client is
+   *   requesting an association.
+   * @param {requestUserCodeCallback} done Callback function.
+   */
+
+  requestUserCode: function(authProvider, clientId, clientSecret, domain,
+                            done) {
     /* jshint -W106:start */
     var body = {
       client_id: clientId,
@@ -13072,7 +13119,7 @@ module.exports = {
     };
     /* jshint -W106:end */
 
-    var associateUrl = URI(authProvider).path(cpa.endpoints.apAssociate);
+    var associateUrl = createUrl(authProvider, cpa.endpoints.associate);
 
     req.postJSON(associateUrl, body)
       .then(
@@ -13092,18 +13139,37 @@ module.exports = {
   },
 
   /**
-   * Requests a token for this client (Client Mode)
+   * Callback function for the {@link CPA.requestClientAccessToken} function.
    *
-   * @see EBU Tech 3366, section 8.3.1.1
-   *
-   * @param authProvider Base url of the authorization provider
-   * @param clientId Id of this client
-   * @param clientSecret Secret of this client
-   * @param domain Domain of the requested token
-   * @param done
+   * @callback requestClientAccessTokenCallback
+   * @param {Error|null} error On success, this value is <code>null</code>;
+   *   on error, it is an <code>Error</code> object containing an error message.
+   * @param {Object|null} data On success, this value is an object containing
+   *   the information described below; on error, this value is
+   *   <code>null</code>.
+   * @param {string} data.access_token The access (or bearer) token value.
+   * @param {string} data.token_type Contains the value "bearer" to indicate
+   *   that this is a bearer token.
+   * @param {string} data.domain_name The name of the service provider, suitable
+   *   for display on the client device.
+   * @param {number} data.expires_in The length of time the access token is
+   *   valid, in seconds.
    */
 
-  requestClientAccessToken: function(authProvider, clientId, clientSecret, domain, done) {
+  /**
+   * Requests a token for this client (Client Mode).
+   *
+   * @see EBU Tech 3366, section 8.3.1.1.
+   *
+   * @param {string|URI} authProvider Base URL of the authorization provider.
+   * @param {string} clientId Id of this client.
+   * @param {string} clientSecret Secret of this client.
+   * @param {string} domain Domain of the requested token.
+   * @param {requestClientAccessTokenCallback} done Callback function.
+   */
+
+  requestClientAccessToken: function(authProvider, clientId, clientSecret,
+                                     domain, done) {
     /* jshint -W106:start */
     var body = {
       grant_type: 'http://tech.ebu.ch/cpa/1.0/client_credentials',
@@ -13113,7 +13179,7 @@ module.exports = {
     };
     /* jshint -W106:end */
 
-    var tokenUrl = URI(authProvider).path(cpa.endpoints.apToken);
+    var tokenUrl = createUrl(authProvider, cpa.endpoints.token);
 
     req.postJSON(tokenUrl, body)
       .then(
@@ -13127,21 +13193,41 @@ module.exports = {
   },
 
   /**
-   * Requests a token for the user associated with this device. The association
-   * is represented by the device_code (User Mode)
+   * Callback function for the {@link CPA.requestUserAccessToken} function.
    *
-   * @see EBU Tech 3366, section 8.3.1.2
-   *
-   * @param authProvider Base url of the authorization provider
-   * @param clientId Id of this client
-   * @param clientSecret Secret of this client
-   * @param deviceCode Code returned by the authorization provider in order
-   * to check if the user_code has been validated
-   * @param domain Domain of the requested token
-   * @param done
+   * @callback requestUserAccessTokenCallback
+   * @param {Error|null} error On success, this value is <code>null</code>;
+   *   on error, it is an <code>Error</code> object containing an error message.
+   * @param {Object|null} data On success, this value is an object containing
+   *   the information described below; on error, this value is
+   *   <code>null</code>.
+   * @param {string} data.user_name The name of the end user, suitable for
+   *   display on the client device.
+   * @param {string} data.access_token The access (or bearer) token value.
+   * @param {string} data.token_type Contains the value "bearer" to indicate
+   *   that this is a bearer token.
+   * @param {string} data.domain_name The name of the service provider, suitable
+   *   for display on the client device.
+   * @param {number} data.expires_in The length of time the access token is
+   *   valid, in seconds.
    */
 
-  requestUserAccessToken: function(authProvider, clientId, clientSecret, deviceCode, domain, done) {
+  /**
+   * Requests a token for the user associated with this device (User Mode).
+   *
+   * @see EBU Tech 3366, section 8.3.1.2.
+   *
+   * @param {string|URI} authProvider Base URL of the authorization provider.
+   * @param {string} clientId Id of this client.
+   * @param {string} clientSecret Secret of this client.
+   * @param {string} deviceCode The temporary device verification code,
+   *   returned from {@link CPA.requestUserCode}.
+   * @param {string} domain Domain of the requested token.
+   * @param {requestUserAccessTokenCallback} done Callback function.
+   */
+
+  requestUserAccessToken: function(authProvider, clientId, clientSecret,
+                                   deviceCode, domain, done) {
     /* jshint -W106:start */
     var body = {
       grant_type: 'http://tech.ebu.ch/cpa/1.0/device_code',
@@ -13152,7 +13238,7 @@ module.exports = {
     };
     /* jshint -W106:end */
 
-    var tokenUrl = URI(authProvider).path(cpa.endpoints.apToken);
+    var tokenUrl = createUrl(authProvider, cpa.endpoints.token);
 
     req.postJSON(tokenUrl, body)
       .then(
@@ -13177,6 +13263,8 @@ module.exports = {
       );
   }
 };
+
+module.exports = CPA;
 
 },{"../utils/req":22,"./definition":18,"URIjs":3}],20:[function(_dereq_,module,exports){
 /*global require,module */
