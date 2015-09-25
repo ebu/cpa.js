@@ -12988,7 +12988,7 @@ module.exports = {
 };
 
 },{}],19:[function(_dereq_,module,exports){
-/*global require, module*/
+/*global require, module, setTimeout*/
 'use strict';
 
 var req = _dereq_('../utils/req'),
@@ -13060,15 +13060,15 @@ var CPA = {
         function(response) {
           if (response.statusCode === 201) {
             // Success
-            done(null, response.body.client_id, response.body.client_secret);
+            done(null, response.body);
           } else {
             // Wrong status code
-            done(new Error('wrong status code'), null, null);
+            done(new Error('wrong status code'));
           }
         },
         function() {
           // Request failed
-          done(new Error('request failed'), null, null);
+          done(new Error('request failed'));
         }
       );
   },
@@ -13261,6 +13261,34 @@ var CPA = {
           done(new Error('request failed'), null);
         }
       );
+  },
+
+  /* jshint -W072:start */
+  pollForUserAccessToken: function(authProvider, clientId, clientSecret,
+                                   deviceCode, domain, pollInterval, done) {
+  /* jshint -W072:end */
+    var self = this;
+
+    function poll() {
+      function requestUserCodeCallback(err, token) {
+        if (err) {
+          done(err);
+        }
+        else {
+          if (token) {
+            done(null, token);
+          }
+          else {
+            setTimeout(poll, pollInterval);
+          }
+        }
+      }
+
+      self.requestUserAccessToken(authProvider, clientId,
+        clientSecret, deviceCode, domain, requestUserCodeCallback);
+    }
+
+    setTimeout(poll, 0);
   }
 };
 
@@ -13328,7 +13356,7 @@ module.exports = function (params) {
 
     ajax(params)
       .then(
-        function (data, textStatus, jqXHR ) {
+        function (data, textStatus, jqXHR) {
           normalised.headers = buildHeaderObject( jqXHR.getAllResponseHeaders() );
           normalised.body = data;
           normalised.statusCode = jqXHR.status;
@@ -13354,7 +13382,7 @@ module.exports = function (params) {
 var ajax = _dereq_('./http-request');
 
 /**
- * Wrapper to simplify Http Asynchronous calls.
+ * Wrapper to simplify asynchronous HTTP calls.
  */
 
 module.exports = {

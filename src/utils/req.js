@@ -4,7 +4,7 @@
 var ajax = require('./http-request');
 
 /**
- * Wrapper to simplify Http Asynchronous calls.
+ * Wrapper to simplify asynchronous HTTP calls.
  */
 
 module.exports = {

@@ -1,4 +1,4 @@
-/*global require, module*/
+/*global require, module, setTimeout*/
 'use strict';
 
 var req = require('../utils/req'),
@@ -70,15 +70,15 @@ var CPA = {
         function(response) {
           if (response.statusCode === 201) {
             // Success
-            done(null, response.body.client_id, response.body.client_secret);
+            done(null, response.body);
           } else {
             // Wrong status code
-            done(new Error('wrong status code'), null, null);
+            done(new Error('wrong status code'));
           }
         },
         function() {
           // Request failed
-          done(new Error('request failed'), null, null);
+          done(new Error('request failed'));
         }
       );
   },
@@ -271,6 +271,51 @@ var CPA = {
           done(new Error('request failed'), null);
         }
       );
+  },
+
+  /**
+   * Polls the authorization provider to receive a token for the user associated
+   *   with this device (User Mode).
+   *
+   * @see EBU Tech 3366, section 8.3.1.2.
+   *
+   * @param {string|URI} authProvider Base URL of the authorization provider.
+   * @param {string} clientId Id of this client.
+   * @param {string} clientSecret Secret of this client.
+   * @param {string} deviceCode The temporary device verification code,
+   *   returned from {@link CPA.requestUserCode}.
+   * @param {Number} pollInterval The time interval between requests,
+   *   in milliseconds
+   * @param {string} domain Domain of the requested token.
+   * @param {requestUserAccessTokenCallback} done Callback function.
+   */
+
+  /* jshint -W072:start */
+  pollForUserAccessToken: function(authProvider, clientId, clientSecret,
+                                   deviceCode, domain, pollInterval, done) {
+  /* jshint -W072:end */
+    var self = this;
+
+    function poll() {
+      function requestUserCodeCallback(err, token) {
+        if (err) {
+          done(err);
+        }
+        else {
+          if (token) {
+            done(null, token);
+          }
+          else {
+            setTimeout(poll, pollInterval);
+          }
+        }
+      }
+
+      self.requestUserAccessToken(authProvider, clientId,
+        clientSecret, deviceCode, domain, requestUserCodeCallback);
+    }
+
+    setTimeout(poll, 0);
   }
 };
 

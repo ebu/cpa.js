@@ -55,7 +55,7 @@ module.exports = function (params) {
 
     ajax(params)
       .then(
-        function (data, textStatus, jqXHR ) {
+        function (data, textStatus, jqXHR) {
           normalised.headers = buildHeaderObject( jqXHR.getAllResponseHeaders() );
           normalised.body = data;
           normalised.statusCode = jqXHR.status;
