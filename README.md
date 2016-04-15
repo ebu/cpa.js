@@ -6,10 +6,9 @@ cpa.js
 This project contains a library which implements the Cross-Platform Authentication
 protocol for `Clients` and is provided and maintained as reference implementation.
 
-This software implements version 1.0 of the Cross-Platform Authentication Protocol ([EBU Tech 3366](https://tech.ebu.ch/docs/tech/tech3366.pdf))
+This software implements version 1.0 of the Cross-Platform Authentication Protocol ([ETSI TS 103 407](https://portal.etsi.org/webapp/WorkProgram/Report_WorkItem.asp?WKI_ID=47970)).
 
 More information on Cross-Platform Authentication: [EBU Tech](http://tech.ebu.ch/cpa)
-
 
 ## Usage
 
@@ -89,8 +88,11 @@ Use `require` to access within Node.js:
 
 ## Related Projects
 
-The demonstrators below are based on this library:
-* [CPA Client](https://github.com/ebu/cpa-client)
+* [Tutorial](https://github.com/ebu/cpa-tutorial)
+* [Authentication Provider](https://github.com/ebu/cpa-auth-provider)
+* [Service Provider](https://github.com/ebu/cpa-service-provider)
+* [Android Client](https://github.com/ebu/cpa-android)
+* [iOS Client](https://github.com/ebu/cpa-ios)
 
 ## Contributors
 
@@ -100,6 +102,6 @@ The demonstrators below are based on this library:
 
 ## Copyright & License
 
-Copyright (c) 2014-2015, EBU-UER Technology & Innovation
+Copyright (c) 2014-2016, EBU-UER Technology & Innovation
 
 The code is under BSD (3-Clause) License. (see LICENSE.txt)
